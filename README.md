@@ -62,6 +62,7 @@ gh repo add-collaborator Linux-25-Tasks --username Open-Source-Community --permi
 
 ### Pushing
 -> push user's task
+
 **push_task.sh**: 
 	1. Go to the task branch and folder, If the task is already marked as done in the tracking sheet, skip it.
 	2. first will check if task is correct, if not it will be crash
