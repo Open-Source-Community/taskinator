@@ -1,4 +1,5 @@
 # Automation-System-Linux
+Git Taskinator automate task delivery and validation of correctness.
 
 # Task system
 
