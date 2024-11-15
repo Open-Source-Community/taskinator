@@ -32,9 +32,7 @@ Git Taskinator automate task delivery and validation of correctness.
 
 ### Initializing
 
-
-
-#### Sample script:
+**Sample script** for creating user repository:
 
 ```bash
 # Add messages explaining what the script will do
@@ -44,6 +42,31 @@ gh repo add-collaborator Linux-25-Tasks --username Open-Source-Community --permi
 
 ```
 
+**initialize.sh script:**
+-> will do
+1. creating user repository
+2. notify admin that user created a repo 
+	1. send email to admin, or adding user to a remote sheet
 
+
+### Updating 
+-> sending updates to user repo
+
+**adding_new_task.sh**: by admin
+1. cloning user repo
+2. adding new task (task folder, new tests)
+3. push it
+
+**update.sh**: by user
+1. user will run it to get new updates (get new tasks)
+
+### Pushing
+-> push user's task
+**push_task.sh**: 
+	1. Go to the task branch and folder, If the task is already marked as done in the tracking sheet, skip it.
+	2. first will check if task is correct, if not it will be crash
+	3. second, it will take the generated key from the test file of task then adding it to new file
+	4. finally , it will push the task to the repository
+	
 ## Limitations
 - 
