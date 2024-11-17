@@ -1,5 +1,6 @@
 # Automation-System-Linux
-Git Taskinator automate task delivery and validation of correctness.
+
+Git Taskinator automates task delivery and validation of correctness.
 
 # Task system
 
@@ -10,63 +11,93 @@ Git Taskinator automate task delivery and validation of correctness.
 - Expose members to scripting and Git early on
 - Showcase the power of scripting and CI/CO
 
+## Required Files
+
+- Google sheet with the following schema
+
+| Name | Discord | Github Repo Link | Task 1 Status | Task 2 Status | ... |
+| ---- | ------- | ---------------- | ------------- | ------------- | --- |
+
+## Task status
+
+- Correct
+- Late (must also be correct)
+- Incorrect
+- Not Submitted
+
 ## Workflow
 
-1. **Initializing**  
-   - Each member will run a script to:
-	   - Create a private repository.
-	   - Add "osc" as a contributor.
-2. updating : 
-	- it's managed by osc, Include
-	2. adding new folder , files , testing files ..etc.
-4. Pushing:
-	- After user finishing tasks , it's time to push it 
-	1. system will check if task is correct first
-	2. second, it will take the generated key from the task and it add it to a new file 
-	3. finally , it will push the task to the repository
-4. After Pushing :
-	- it will be a github action, that is taken when user pushing a task
-	- it will run a script to notify admin 
-		- notification may be a lot of things like : (sending user information to admin, adding user information at somewhere,...etc)
+#### 1. Initializing
 
+- Each member will run a script to:
+  - Create a private repository.
+  - Clone the repo locally
+  - Add "osc" as a contributor.
+- **Note**: Create google form to collect GitHub usernames/repo links
+  - Current ideas to write this in the sheet automatically would expose the Google Sheet API secret.
 
-### Initializing
+#### 2. Publishing new task :
 
-**Sample script** for creating user repository:
+- For every new task, create task folder for session (responsibility of session leaders).
+  - Create a folder locally named “Task_X.”
+  - Add a `README.md` file to describe the task.
+  - Include an empty `commands.sh` file for writing task commands.
+  - Add any necessary files or folders.
+  - Include an **encrypted/binary** `test.sh` script.
+    - If task is wrong, print a descriptive error message and return -1.
+    - If task is correct, print success and return 0.
+  - Encrypt using the provided script.
+- For each member:
+  - Clone their repository.
+  - Copy the task folder to their repository.
+  - Push the changes.
 
-```bash
-# Add messages explaining what the script will do
-gh auth login
-gh repo create Linux-25-Tasks --private --clone
-gh repo add-collaborator Linux-25-Tasks --username Open-Source-Community --permission admin
+#### 3. Submitting task:
 
-```
+1.  Run the 'test.sh' to check if task is correct
+2.  If test fails, display a warning with the option to proceed submitting an incorrect task
+3.  If test succeeds or user decided to proceed:
+    - Add and commit changes.
+    - Push to remote.
 
-**initialize.sh script:**
--> will do
-1. creating user repository
-2. notify admin that user created a repo 
-	1. send email to admin, or adding user to a remote sheet
+- **Note**: Using this script is optional. Members can add, commit and push their changes on their own.
 
+#### 4. Grading tasks
 
-### Updating 
--> sending updates to user repo
+- Take task number as argument T
+- Pass --late option to mark correct tasks as "late"
+- For every member in sheet whose task T status is either "incorrect" or "not submitted":
+  - Clone tasks repo
+  - Run 'test.sh'
+  - Update task status in Google Sheet
 
-**adding_new_task.sh**: by admin
-1. cloning user repo
-2. adding new task (task folder, new tests)
-3. push it
+## Scripts
 
-**update.sh**: by user
-1. user will run it to get new updates (get new tasks)
+1. **create_repository.sh**
 
-### Pushing
--> push user's task
+   ```bash
+   # Sample script
+   gh auth login
+   gh repo create Linux-25-Tasks --private --clone
+   gh repo add-collaborator Linux-25-Tasks --username Open-Source-Community --permission admin
 
-**push_task.sh**: 
-1. Go to the task branch and folder, If the task is already marked as done in the tracking sheet, skip it.
-2. first will check if task is correct, if not it will be crash.
-3. second, it will take the generated key from the test file of task then adding it to new file.
-4. finally , it will push the task to the repository.
-## Limitations
-- 
+   ```
+
+2. **add_new_task.sh**
+
+3. **submit_task.sh**
+
+4. **grade_tasks.sh**
+
+5. **script_to_binary.sh** / **encrypt_script.sh**
+
+## Design choices
+
+- Using task upload as a chance to practice Git skills vs **aiming to minimize Git overhead during task submission.**
+
+  - This would make the system more generic and perhaps more useful to other committess
+  - Other ways to put Git skills to practice (Documentation project)
+
+- Letting members create repos on their account vs creating task repos on OSC org
+- Grading tasks upon submission (GitHub action, handling Google Sheets API token secret depending on previous point) vs **upon manually running grading script on all submissions**
+  - A GitHub action could be set up, but unfortunaly would expose the Google Sheet API token. Making it a secret wouldn't help because the current approach relies on the member creating their repo, which makes them an admin by default.
