@@ -13,10 +13,15 @@ Git Taskinator automates task delivery and validation of correctness.
 
 ## Required Files
 
-- Google sheet with the following schema
+- For every task, prepare a Google sheet with the following schema
 
-| Name | Discord | Github Repo Link | Task 1 Status | Task 2 Status | ... |
-| ---- | ------- | ---------------- | ------------- | ------------- | --- |
+| Name | Discord | Github Repo Link | Task Status |
+| ---- | ------- | ---------------- | ----------- |
+
+## Task Preparation (Linux '25')
+
+- Preparing tasks is joint responsibility of the 2 session leaders.
+- If only one person will lead the session, the task master must be involved in the content preparation and attend the session. The session leader must review the task scope and focus before implementation.
 
 ## Task status
 
@@ -43,7 +48,8 @@ Git Taskinator automates task delivery and validation of correctness.
   - Add a `README.md` file to describe the task.
   - Include an empty `commands.sh` file for writing task commands.
   - Add any necessary files or folders.
-  - Include an **encrypted/binary** `test.sh` script.
+  - Include an ~~encrypted/binary~~ `test.sh` script.
+    - **Make the script available and unencrypted as a learning resource**
     - If task is wrong, print a descriptive error message and return -1.
     - If task is correct, print success and return 0.
   - Encrypt using the provided script.
@@ -64,12 +70,13 @@ Git Taskinator automates task delivery and validation of correctness.
 
 #### 4. Grading tasks
 
-- Take task number as argument T
-- Pass --late option to mark correct tasks as "late"
-- For every member in sheet whose task T status is either "incorrect" or "not submitted":
-  - Clone tasks repo
-  - Run 'test.sh'
-  - Update task status in Google Sheet
+- Indicate late grading to mark correct tasks as "late"
+  - Argument or flag
+- For a given task T:
+  - For every member in sheet whose task T status is either "incorrect" or "not submitted":
+    - Clone tasks repo
+    - Run 'test.sh'
+    - Update task status in Google Sheet
 
 ## Scripts
 
@@ -89,8 +96,6 @@ Git Taskinator automates task delivery and validation of correctness.
 
 4. **grade_tasks.sh**
 
-5. **script_to_binary.sh** / **encrypt_script.sh**
-
 ## Design choices
 
 - Using task upload as a chance to practice Git skills vs **aiming to minimize Git overhead during task submission.**
@@ -98,6 +103,13 @@ Git Taskinator automates task delivery and validation of correctness.
   - This would make the system more generic and perhaps more useful to other committess
   - Other ways to put Git skills to practice (Documentation project)
 
-- Letting members create repos on their account vs creating task repos on OSC org
+- **Letting members create repos on their account** vs creating task repos on OSC org
+  - Creating and pushing to 30+ repos would clutter the org
 - Grading tasks upon submission (GitHub action, handling Google Sheets API token secret depending on previous point) vs **upon manually running grading script on all submissions**
   - A GitHub action could be set up, but unfortunaly would expose the Google Sheet API token. Making it a secret wouldn't help because the current approach relies on the member creating their repo, which makes them an admin by default.
+
+## Resources
+
+- Badr's testing script
+  - [Video](https://youtu.be/Qu_9GhIeADE?si=3tGtLL8Qmk8RqYQL)
+  - [Script](https://github.com/Badr-1/scripts/tree/main/testing)
