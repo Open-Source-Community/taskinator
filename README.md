@@ -37,7 +37,7 @@ Git Taskinator automates task delivery and validation of correctness.
 - Each member will run a script to:
   - Create a private repository.
   - Clone the repo locally
-  - Add "osc" as a contributor.
+  - Add OSC as a contributor.
 - **Note**: Create google form to collect GitHub usernames/repo links
   - Current ideas to write this in the sheet automatically would expose the Google Sheet API secret.
 
@@ -52,7 +52,6 @@ Git Taskinator automates task delivery and validation of correctness.
     - **Make the script available and unencrypted as a learning resource**
     - If task is wrong, print a descriptive error message and return -1.
     - If task is correct, print success and return 0.
-  - Encrypt using the provided script.
 - For each member:
   - Clone their repository.
   - Copy the task folder to their repository.
@@ -80,7 +79,7 @@ Git Taskinator automates task delivery and validation of correctness.
 
 ## Scripts
 
-1. **create_repository.sh**
+1. **create_repository.sh** (run by member)
 
    ```bash
    # Sample script
@@ -90,11 +89,11 @@ Git Taskinator automates task delivery and validation of correctness.
 
    ```
 
-2. **add_new_task.sh**
+2. **add_new_task.sh** (run by admin)
 
-3. **submit_task.sh**
+3. **submit_task.sh** (run by member)
 
-4. **grade_tasks.sh**
+4. **grade_tasks.sh** (run by admin)
 
 ## Design choices
 
@@ -107,6 +106,10 @@ Git Taskinator automates task delivery and validation of correctness.
   - Creating and pushing to 30+ repos would clutter the org
 - Grading tasks upon submission (GitHub action, handling Google Sheets API token secret depending on previous point) vs **upon manually running grading script on all submissions**
   - A GitHub action could be set up, but unfortunaly would expose the Google Sheet API token. Making it a secret wouldn't help because the current approach relies on the member creating their repo, which makes them an admin by default.
+
+## Limitations
+- Task master does not have access to OSC org, so they will need to send the task to the head before uploading it. However, this will encourage review by the head.
+- Members may run into issues with GitHub authentication. Th 
 
 ## Resources
 
