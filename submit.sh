@@ -39,13 +39,13 @@ testing_task () {
 
 pushing_task () {
 	echo "in function publish"
-
+	pwd
 	if ! [ $(git branch --show-current) == 'master' -o $(git symbolic-ref --short HEAD) == 'main' ]; then
 		printf "Error: invalid branch, ensure you are in main or master branch"
 		exit 1
 	fi
 
-	if [ -z $(git status -s | ln) ]; then
+	if [ $(git status -s | wc -l ) != 0 ]; then
 		git add . > /dev/null 2>&1
 		git commit -m "commit changes" > /dev/null 2>&1
 	fi
