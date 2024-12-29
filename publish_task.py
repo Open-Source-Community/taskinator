@@ -1,3 +1,8 @@
+# Script usage
+'''
+publish_task "Path to CSV file with github links" "Path to Task folder"
+'''
+
 import csv
 import sys
 import os

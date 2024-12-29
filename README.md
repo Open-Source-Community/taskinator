@@ -4,6 +4,10 @@ Git Taskinator automates task delivery and validation of correctness.
 
 # Task system
 
+## Progress
+
+Track the project progress [here](PROGRESS.md).
+
 ## Goals
 
 - Automate task submission and grading process
@@ -108,8 +112,9 @@ Git Taskinator automates task delivery and validation of correctness.
   - A GitHub action could be set up, but unfortunaly would expose the Google Sheet API token. Making it a secret wouldn't help because the current approach relies on the member creating their repo, which makes them an admin by default.
 
 ## Limitations
+
 - Task master does not have access to OSC org, so they will need to send the task to the head before uploading it. However, this will encourage review by the head.
-- Members may run into issues with GitHub authentication. Th 
+- Members may run into issues with GitHub authentication. Th
 
 ## Resources
 
