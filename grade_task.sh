@@ -25,9 +25,9 @@
 # Hardcoded Arguments
 task=3
 solution="commands.sh"
-test_script="test.sh"
-source="sample.tsv"
-target="output.tsv"
+test_script="demo/test.sh"
+source="demo/sample.tsv"
+target="demo/output.tsv"
 
 # Color constants
 YELLOW="\033[33m"
