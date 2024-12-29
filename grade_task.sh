@@ -1,4 +1,43 @@
 #!/bin/bash
+
+# Based on https://github.com/Badr-1/scripts/tree/main/testing
+
+# A script to auto-grade OSC Linux committee tasks
+
+# Requirements
+# Git
+# bat (for syntax-highlighted file viewing)
+# lsd (for enhanced directory listing)
+# fzf (for interactive file selection)
+# Bash
+
+# Input: tsv file with the following schema:
+# | Timestamp | Email Address	| Full name | Link to Task repo |
+
+# Output: tsv file with the following schema:
+# "| Name | Email | Github Link | Result |"
+
+# Result can take three values:
+# CORRECT
+# INCORRECT
+# NOTSUBMITTED
+
+# Hardcoded Arguments
+task=3
+solution="commands.sh"
+test_script="test.sh"
+source="sample.tsv"
+target="output.tsv"
+
+# Color constants
+YELLOW="\033[33m"
+NORMAL="\033[0;39m"
+RED="\033[31m"
+GREEN="\033[32m"
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+# Function definitions
 run_test() {
     source "$root/$test_script" "$solution"
     return $?
@@ -98,21 +137,9 @@ test_repo() {
 
 }
 
-YELLOW="\033[33m"
-NORMAL="\033[0;39m"
-RED="\033[31m"
-GREEN="\033[32m"
-bold=$(tput bold)
-normal=$(tput sgr0)
+# Main
 
-root=$(pwd)
-task=3
-solution="commands.sh"
-test_script="test.sh"
-source="sample.tsv"
-target="output.tsv"
-
-echo "" >"$target"
+echo -e "Name\tEmail\tGithub Link\tResult" >"$target"
 
 echo "Grading ${bold}task $task${normal}..."
 
@@ -120,6 +147,8 @@ if [[ ! -e $source ]]; then
     echo -e "${bold}${RED}Data sheet not found!${NORMAL}${normal}"
     exit 1
 fi
+
+root=$(pwd)
 
 repos_number=$(wc -l <"$source")
 echo "${bold}Number of repos: $repos_number${normal}"
@@ -140,4 +169,5 @@ for student in $(seq 1 "$repos_number"); do
 done
 
 echo -e "Grading complete! Results in ${bold}$target${normal}"
+bat $target
 exit 0
