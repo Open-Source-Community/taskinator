@@ -96,6 +96,7 @@ test_repo() {
     if [[ -f "$solution" ]]; then
         echo -e "${GREEN}Solution file found!${NORMAL}"
     else
+        lsd
         read -rp "${bold}Does the solution exist? (y/n): ${normal}" answer
         if [[ $answer == 'y' ]]; then
             wrong_name=$(find . -type f | fzf)
