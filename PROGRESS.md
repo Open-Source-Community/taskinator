@@ -8,8 +8,8 @@
 - ~~Tested repo creation~~
 
 ## Up next 👷
-
-- Implement "late" grading
+- Add grading comments along with result
+- Implement "late" grading via file metadata
 - Test task publishing
 - Test submit task
 - Test grading script
