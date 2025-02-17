@@ -149,7 +149,7 @@ normal=$(tput sgr0)
 
 # Function definitions
 run_test() {
-    source "$root/$_arg_test_script" "$_arg_solution"
+    "$_arg_test_script" "$_arg_solution"
     return $?
 }
 
@@ -177,7 +177,7 @@ test_repo() {
     result=NOTSUBMITTED
     name=$(echo "$entry" | cut -f3)
     email=$(echo "$entry" | cut -f2)
-    github_link=$(echo "$entry" | cut -f4)
+    github_link=$(echo "$entry" | cut -f6)
     reponame="entry_$student"
     echo -e "${bold}Name:${normal} $name"
     echo -e "${bold}Email:${normal} $email"
@@ -220,7 +220,7 @@ test_repo() {
     fi
 
     # Run test script
-    if run_test; then
+    if run_test;  then
         echo -e "${bold}${GREEN}Solution auto-graded as correct${NORMAL}${normal}"
         result=CORRECT
         write_result
@@ -229,8 +229,9 @@ test_repo() {
         # Print solution to check manually
         echo -e "${bold}${YELLOW}Auto-grading failed!${NORMAL}${normal}"
         read -rp "${bold}Press Enter to grade manually ${normal}" answer
+	
+	kitty .
 
-        bat -P $_arg_solution
         read -rp "${bold}Is the solution correct? (y/n): ${normal}" answer
         if [ $answer == 'y' ]; then
             echo -e "${bold}${GREEN}Solution manually graded as correct${NORMAL}${normal}"
