@@ -1,0 +1,23 @@
+name: test paths
+
+on:
+  push:
+    branches: main
+    
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          
+      - name: Make script executable
+        run: chmod +x distribute.sh
+      
+      - name: Run distribution script
+        run: ./distribute.sh
+        env:
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          
