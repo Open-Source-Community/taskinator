@@ -43,3 +43,11 @@ echo "Creating new task repo..."
   add_collaborators
 } &> /dev/null 
 echo "Task repo created successfully!"
+
+echo "==============================="
+echo "Now when Enter will Redirect you to the github to install app"
+echo "You Install it and Select a Repo Called Linux-25-Training:"
+read key
+xdg-open "https://github.com/apps/task-handler"
+
+gh issue comment 1 --repo Open-Source-Community/Linux-Tasks --body "Get Tasks"
