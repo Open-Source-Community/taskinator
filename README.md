@@ -1,123 +1,106 @@
-# Automation-System-Linux
+# Taskinator: Task Automation System
 
-Git Taskinator automates task delivery and validation of correctness.
+## Overview
 
-# Task system
+**Taskinator** is a Bash-based automation system for managing, distributing, and grading tasks, developed by OSC Linux. It aims to streamline the delivery and grading of tasks, both internally and during events and workshops.
+---
 
-## Progress
+## General Workflow
 
-Track the project progress [here](PROGRESS.md).
+1. **Repository Creation**  
+   Each student runs `create_repo.sh` to create a private repository where they will recieve and solve their tasks.
+   - Board members are added as collaborators.
+   - Task-Handler GitHub app is installed to the repo.
+   - The student submits the repo link in a form.
 
-## Goals
 
-- Automate task submission and grading process
-- Verify using the command line
-- Expose members to scripting and Git early on
-- Showcase the power of scripting and CI/CO
+2. **Task Distribution**  
+    
+    - distribute.sh distributes task files from a central location to all student repositories.
+    - Is currently triggered by commenting on an issue
 
-## Required Files
+3. **Task Grading**  
+   - Running grade_task.sh to automatically grade student submissions and generate a results CSV.
+   - Also uploads the result to the students' task repo
+   - Is currently triggered by commenting on an issue
 
-- For every task, prepare a Google sheet with the following schema
+---
 
-| Name | Discord | Github Repo Link | Task Status |
-| ---- | ------- | ---------------- | ----------- |
+## Script Details
 
-## Task Preparation (Linux '25')
+### 1. create_repo.sh
 
-- Preparing tasks is joint responsibility of the 2 session leaders.
-- If only one person will lead the session, the task master must be involved in the content preparation and attend the session. The session leader must review the task scope and focus before implementation.
+**Modifiable Variables:** 
 
-## Task status
+- **REPO_NAME**: Name of the repository to create 
+- **COLLABORATORS**: Array of GitHub usernames to add as collaborators
 
-- Correct
-- Late (must also be correct)
-- Incorrect
-- Not Submitted
+**Outputs:**
+- Creates a private repository under the authenticated user's account.
+- Adds each collaborator with admin rights.
+- Installs the GH app
 
-## Workflow
+Students will run
 
-#### 1. Initializing
+```bash
+./create_repo.sh
+```
 
-- Each member will run a script to:
-  - Create a private repository.
-  - Clone the repo locally
-  - Add OSC as a contributor.
-- **Note**: Create google form to collect GitHub usernames/repo links
-  - Current ideas to write this in the sheet automatically would expose the Google Sheet API secret.
+---
 
-#### 2. Publishing new task :
+### 2. distribute.sh
 
-- For every new task, create task folder for session (responsibility of session leaders).
-  - Create a folder locally named “Task_X.”
-  - Add a `README.md` file to describe the task.
-  - Include an empty `commands.sh` file for writing task commands.
-  - Add any necessary files or folders.
-  - Include an ~~encrypted/binary~~ `test.sh` script.
-    - **Make the script available and unencrypted as a learning resource**
-    - If task is wrong, print a descriptive error message and return -1.
-    - If task is correct, print success and return 0.
-- For each member:
-  - Clone their repository.
-  - Copy the task folder to their repository.
-  - Push the changes.
+**Purpose:**  
+Distributes task files to all student repositories using the GitHub App API.
 
-#### 3. Submitting task:
+**Inputs:**
+- **APP_ID** and **APP_PRIVATE_KEY**: GitHub App credentials (set as environment variables).
+- **TASKS_DIR**: Directory containing task files (default: current directory).
+- **Task file pattern**: Only files matching "Task" in their name are distributed.
 
-1.  Run the 'test.sh' to check if task is correct
-2.  If test fails, display a warning with the option to proceed submitting an incorrect task
-3.  If test succeeds or user decided to proceed:
-    - Add and commit changes.
-    - Push to remote.
+**Outputs:**
+- Copies/updates task files in each student repository.
 
-- **Note**: Using this script is optional. Members can add, commit and push their changes on their own.
+```bash
+export APP_ID=your_app_id
+export APP_PRIVATE_KEY="your_private_key"
+./distribute.sh
+```
 
-#### 4. Grading tasks
+---
 
-- Indicate late grading to mark correct tasks as "late"
-  - Argument or flag
-- For a given task T:
-  - For every member in sheet whose task T status is either "incorrect" or "not submitted":
-    - Clone tasks repo
-    - Run 'test.sh'
-    - Update task status in Google Sheet
+### 3. grade_task.sh
 
-## Scripts
+**Purpose:**  
+Clones each student repository, runs a test script, and records the result in a CSV file.
 
-1. **create_repository.sh** (run by member)
+**Inputs:**
+- **source_file**: CSV file with student info and repo links (modifiable variable).
+- **test_script**: Path to the grading/test script (modifiable variable).
+- **task_number**: Task/session number (passed as argument).
 
-   ```bash
-   # Sample script
-   gh auth login
-   gh repo create Linux-25-Tasks --private --clone
-   gh repo add-collaborator Linux-25-Tasks --username Open-Source-Community --permission admin
+**Outputs:**
+- **target_file**: CSV file with grading results.
+- **Result.md**: Markdown file with grading summary pushed to student repo.
 
-   ```
+```bash
+./grade_task.sh 1
+```
+*(where `1` is the task/session number)*
 
-2. **add_new_task.sh** (run by admin)
+---
 
-3. **submit_task.sh** (run by member)
+## Environment & Dependencies
 
-4. **grade_tasks.sh** (run by admin)
+- **GitHub CLI (`gh`)**: Required for create_repo.sh.
+- **GitHub App**: Required for distribute.sh (set `APP_ID` and `APP_PRIVATE_KEY`).
+- **Dependencies for distribute.sh**: `curl`, `jq`, `base64`, `openssl`.
+- **Bash**: All scripts are Bash scripts and should be run in a Unix-like environment.
 
-## Design choices
+---
 
-- Using task upload as a chance to practice Git skills vs **aiming to minimize Git overhead during task submission.**
 
-  - This would make the system more generic and perhaps more useful to other committess
-  - Other ways to put Git skills to practice (Documentation project)
-
-- **Letting members create repos on their account** vs creating task repos on OSC org
-  - Creating and pushing to 30+ repos would clutter the org
-- Grading tasks upon submission (GitHub action, handling Google Sheets API token secret depending on previous point) vs **upon manually running grading script on all submissions**
-  - A GitHub action could be set up, but unfortunaly would expose the Google Sheet API token. Making it a secret wouldn't help because the current approach relies on the member creating their repo, which makes them an admin by default.
-
-## Limitations
-
-- Task master does not have access to OSC org, so they will need to send the task to the head before uploading it. However, this will encourage review by the head.
-- Members may run into issues with GitHub authentication. Th
-
-## Resources
-
+## References
 - Badr's testing script
-  - [Video](https://youtu.be/Qu_9GhIeADE?si=3tGtLL8Qmk8RqYQL)
-  - [Script](https://github.com/Badr-1/scripts/tree/main/testing)
+    - [Video](https://youtu.be/Qu_9GhIeADE?si=3tGtLL8Qmk8RqYQL)
+    - [Script](https://github.com/Badr-1/scripts/tree/main/testing)
