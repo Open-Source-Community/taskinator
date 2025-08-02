@@ -29,25 +29,31 @@ if [ $? = 0 ]; then
   add_collaborators 
   gh repo clone "$username/$repo_name" &> /dev/null || exit 1
   echo "Existing task repo cloned successfully!"
-  exit 0
+else
+    # Creating a new repo
+    echo "Creating new task repo..."
+    {
+      git init -b main $repo_name 
+      cd $repo_name
+      git commit --allow-empty -m "repository setup"
+      gh repo create $repo_name --private --source=. --remote=origin
+      git push -u origin main
+      add_collaborators
+    } &> /dev/null 
+    echo "Task repo created successfully!"
 fi
 
-# Creating a new repo
-echo "Creating new task repo..."
-{
-  git init -b main $repo_name 
-  cd $repo_name
-  git commit --allow-empty -m "repository setup"
-  gh repo create $repo_name --private --source=. --remote=origin
-  git push -u origin main
-  add_collaborators
-} &> /dev/null 
-echo "Task repo created successfully!"
-
 echo "==============================="
-echo "Now when Enter will Redirect you to the github to install app"
-echo "You Install it and Select a Repo Called Linux-25-Training:"
+echo "You will be redirected to GitHub to install the automation app."
+echo "1. Click 'Configure'"
+echo "2. Choose your GitHub account and click 'Install'"
+echo "3. Change repository access to 'Only select repositories' and choose $repo_name"
+echo "4. Click 'Save'"
+echo "Press Enter to open the link in your browser: https://github.com/apps/task-handler"
 read key
-xdg-open "https://github.com/apps/task-handler"
+xdg-open "https://github.com/apps/task-handler" > /dev/null
 
-gh issue comment 1 --repo Open-Source-Community/Linux-Tasks --body "Get Tasks"
+# Trigger task distribution
+gh issue comment 1 --repo Open-Source-Community/Linux-Tasks --body "Get Tasks" > /dev/null
+
+echo "Repo initialization completed!"
