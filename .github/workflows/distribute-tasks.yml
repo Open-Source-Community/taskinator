@@ -1,23 +1,24 @@
-name: test paths
+name: Distribute Tasks
 
 on:
-  push:
-    branches: main
-    
+  issue_comment:
+    types: [created]
+
 jobs:
-  detect-changes:
+  Distribute-Tasks:
+    if: github.event.issue.number == 2
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-          
+
       - name: Make script executable
         run: chmod +x distribute.sh
-      
+
       - name: Run distribution script
         run: ./distribute.sh
         env:
           APP_ID: ${{ secrets.APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-          
