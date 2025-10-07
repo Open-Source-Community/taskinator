@@ -1,4 +1,6 @@
-# Taskinator: Automated Task Distribution and Grading System
+# Taskinator 
+
+![alt text](assets/logo.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bash](https://img.shields.io/badge/Bash-4EAA25?logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
@@ -6,7 +8,7 @@
 
 **Taskinator** is a Bash-based automation system for distributing and grading programming assignments at scale. Built for OSC Ain Shams University's Linux Committee, it automates the entire task lifecycle from distribution to grading, enabling instructors to focus on teaching rather than logistics.
 
-## Table of Contents
+## Table of Contents 
 
 - [Background](#background)
 - [Workflow](#workflow)
@@ -20,7 +22,7 @@
 - [Credits](#credits)
 - [License](#license)
 
-## Background
+## So, what's the deal?
 
 OSC hosts a lot of events throughout the year (workshops, training, etc) where we assign programming assignments. The traditional manual grading workflow created several bottlenecks:
 
@@ -376,7 +378,7 @@ These arguments to the system are set as hard-coded variables in the scripts. Mo
 
 ### Common Issues
 
-**Issue**: Tasks not distributing to student repos
+⚠️ **Issue**: Tasks not distributing to student repos
 
 ```bash
 # Check GitHub Action logs
@@ -388,7 +390,7 @@ gh run view <run-id> --log
 # - Naming convention violated (not Task-N/)
 ```
 
-**Issue**: Grading fails or hangs
+⚠️ **Issue**: Grading fails or hangs
 
 ```bash
 # Test script locally first
@@ -401,7 +403,7 @@ bash task_1_test.sh  # Should exit 0 for pass
 # - Buggy solutions (running commands like sleep, exit, etc)
 ```
 
-**Issue**: Students not receiving results
+ ⚠️ **Issue**: Students not receiving results
 
 ```bash
 # Check student repo from the website
@@ -414,23 +416,23 @@ bash task_1_test.sh  # Should exit 0 for pass
 - Report bugs and request features through issues.
 - Contact maintainers for support.
 
-## Design Decisions
+## Design Choices
 
-**Why issue comments as triggers?**
+❓ **Why issue comments as triggers?**
 
 Since we were testing the system at scale for the first time, we wanted some level of oversight and control over it. However, it can be entirely automated using a different trigger for the actions, or using cron jobs.
 
-**Why exclude test scripts from distribution?**
+❓ **Why exclude test scripts from distribution?**
 
 Some of the tasks we designed made this necessary. For example, we had a task where trainees needed to find a certain password within a large text file. Sharing the script would give away the solution.
 
 However, we realize that the benefits of sharing the test script might outweigh this restriction. In this case, you can copy it under a different name, or modify the system to remove this exclusion.
 
-**Why private student repos?**
+❓ **Why private student repos?**
 
 To prevent sharing solutions between students, and to protect student solutions and grades.
 
-**Why private central repo?**
+❓ **Why private central repo?**
 
 Because it contains the test scripts, as well as summaries of grading results. This is info you presumably wouldn't want to be public.
 
