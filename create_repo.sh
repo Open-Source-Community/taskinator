@@ -3,8 +3,11 @@
 # Prerequistes: gh, git
 
 # Modifiable variables - set per your usage
-collaborators=('thisisamna' 'hadeer-r' 'HabibaYossre' 'Momen-MKadry')
-repo_name="Linux-25-Training"
+## Add you github usernames ex: 'thisisamna' 'hadeer-r' 'HabibaYossre' 'Momen-MKadry' 
+# No comma between names and use single qoutes 
+collaborators=('username')
+## Add repo name ex: Linux-25-Traning
+repo_name=""
 task_handler_app="https://github.com/apps/task-handler"
 
 # Fetching the student's username
