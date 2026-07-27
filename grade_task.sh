@@ -299,7 +299,7 @@ process_repo() {
 
     # Clone repository
     echo "  📥 Cloning repository..."
-    if ! git clone "$auth_url" "$username" >/dev/null; then
+    if ! git clone --depth 1 "$auth_url" "$username" >/dev/null; then
         echo "  ❌ Failed to clone $repo_full_name"
         # Add failed clone entries to summary for all tasks
         for task in "${tasks[@]}"; do
